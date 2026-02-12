@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    /* Module Settings */
+    "target": "ES2022",
+    "module": "NodeNext",              
+    "moduleResolution": "NodeNext",      
+    
+    
+    
+    
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    
+    /* Strictness */
+    "strict": true,
+    "skipLibCheck": true,
+    "noImplicitAny": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "prisma"]
+}
