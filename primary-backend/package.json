@@ -5,8 +5,8 @@
   "main": "index.js",
  "scripts": {
   "build": "tsc -b",
-  "start": "node dist/src/index.js", 
-  "dev": "tsx src/index.ts",
+  "start": "node dist/types/index.js", 
+  "dev": "tsx src/types/index.ts",
   "postinstall": "npx prisma generate"
 },
   "keywords": [],
