@@ -13,11 +13,13 @@ export const SignupSchema = z.object({
 
 export const ZapCreateSchema = z.object({
   availableTriggerId: z.string(),
-  triggerMetadata: z.record(z.unknown()).optional().default({}),
+  // Explicitly add z.string() as the key type
+  triggerMetadata: z.record(z.string(), z.unknown()).default({}), 
   actions: z.array(
     z.object({
       availableActionId: z.string(),
-      actionMetadata: z.record(z.unknown()).optional().default({}),
+      // Explicitly add z.string() as the key type
+      actionMetadata: z.record(z.string(), z.unknown()).default({}), 
     })
   ),
 });
