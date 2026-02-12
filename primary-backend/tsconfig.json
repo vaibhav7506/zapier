@@ -1,19 +1,16 @@
 {
   "compilerOptions": {
-    /* Module Settings */
     "target": "ES2022",
-    "module": "NodeNext",              
-    "moduleResolution": "NodeNext",      
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     
-    
-    
+    /* Explicitly include Node types to fix the 'process' error */
+    "types": ["node"],                                   
     
     "outDir": "./dist",
     "rootDir": "./src",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    
-    /* Strictness */
     "strict": true,
     "skipLibCheck": true,
     "noImplicitAny": true
