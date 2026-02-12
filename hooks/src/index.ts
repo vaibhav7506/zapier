@@ -13,20 +13,21 @@ app.post("/hooks/catch/:userId/:zapId", async (req, res) => {
 
     // Fix: Explicitly typing 'tx' to resolve the 'any' error
     // In Prisma, the transaction client type is derived from your main client
-    await client.$transaction(async (tx) => {
-        const run = await tx.zapRun.create({
-            data: {
-                zapId: zapId,
-                metadata: body
-            }
-        });
-
-        await tx.zapRunOutbox.create({
-            data: {
-                zapRunId: run.id
-            }
-        });
+   await client.$transaction(async (tx) => {
+    const run = await tx.zapRun.create({
+        data: {
+            // Change zapId to ZapId (match the suggestion in your error log)
+            zapId: zapId, 
+            metadata: body
+        }
     });
+
+    await tx.zapRunOutbox.create({
+        data: {
+            zapRunId: run.id
+        }
+    });
+});
 
     res.json({
         message: "Webhook received"
