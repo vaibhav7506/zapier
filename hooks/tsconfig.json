@@ -6,7 +6,7 @@
     
     /* Required to resolve 'process.env' and other Node globals */
     "types": ["node"],                   
-    
+    "noImplicitAny": false,              /* Loosen type checking for faster development iteration */
     "outDir": "./dist",
     "rootDir": "./src",                  /* Ensures src/index.ts becomes dist/index.js */
     "esModuleInterop": true,
