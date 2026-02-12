@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    @apply min-h-screen text-gray-900;
+    background-color: #fffdf9;
+    -webkit-text-size-adjust: 100%;
+  }
+}
+
+@layer components {
+  /* Ensure buttons and inputs have proper display */
+  input, button, select, textarea {
+    @apply box-border;
+  }
+}
