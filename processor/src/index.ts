@@ -1,20 +1,20 @@
-
 import { PrismaClient } from "@prisma/client";
-
-
+import express from 'express';
 import { Kafka } from "kafkajs";
 
 const client = new PrismaClient();
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-// Fix: Use the topic name you created in the Aiven dashboard
+// Topic name must match your Aiven dashboard configuration
 const TOPIC_NAME = "zap-runs"; 
 
+// Kafka configuration using SSL certificates for Aiven
 const kafka = new Kafka({
   clientId: "outbox-processor",
-  // Fix: Use environment variables for Render compatibility
   brokers: [process.env.KAFKA_BROKER || ""], 
   ssl: {
-    rejectUnauthorized: false, // Required for Aiven's self-signed certificates
+    rejectUnauthorized: false, // Essential for Aiven's self-signed certs
     ca: [process.env.KAFKA_CA_CERT || ""],
     key: process.env.KAFKA_KEY_CERT || "",
     cert: process.env.KAFKA_SERVICE_CERT || "",
@@ -23,11 +23,15 @@ const kafka = new Kafka({
 
 async function main() {
   const producer = kafka.producer();
+  
   try {
+    // Connect to Aiven Kafka
     await producer.connect();
     console.log("Producer connected to Aiven Kafka");
 
+    // Continuous polling loop
     while (true) {
+      // Fetch the top 10 pending runs from the outbox
       const pendingRows = await client.zapRunOutbox.findMany({
         take: 10,
       });
@@ -35,19 +39,18 @@ async function main() {
       if (pendingRows.length > 0) {
         console.log(`Processing ${pendingRows.length} rows...`);
 
-        // Fix: Use await so the code waits for Kafka to confirm receipt
+        // Send messages to Kafka
         await producer.send({
           topic: TOPIC_NAME,
-          // Change: Add the type for 'r' (or use 'any' if you want a quick fix)
           messages: pendingRows.map((r: any) => ({
             value: JSON.stringify({ zapRunId: r.zapRunId }),
           })),
         });
 
+        // Delete processed rows from outbox to prevent duplicates
         await client.zapRunOutbox.deleteMany({
           where: {
             id: {
-              // Change: Add the type for 'x'
               in: pendingRows.map((x: any) => x.id),
             },
           },
@@ -56,15 +59,29 @@ async function main() {
         console.log("Successfully moved rows to Kafka and cleared Outbox");
       }
 
-      // Important: Add a small delay to avoid 100% CPU usage
+      // 1-second delay to prevent 100% CPU usage
       await new Promise((r) => setTimeout(r, 1000));
     }
   } catch (error) {
     console.error("Processor Error:", error);
   } finally {
+    // Graceful shutdown
     await producer.disconnect();
     await client.$disconnect();
   }
 }
 
-main();
+// 1. Health check endpoint for Render
+app.get('/', (req, res) => {
+  res.send('Worker is healthy and running!');
+});
+
+// 2. Start the Express server first so Render sees the open port immediately
+app.listen(PORT, () => {
+  console.log(`Health check server listening on port ${PORT}`);
+  
+  // 3. Start the main background loop
+  main().catch((err) => {
+    console.error("Fatal error in main loop:", err);
+  });
+});
