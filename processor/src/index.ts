@@ -1,4 +1,6 @@
-import { PrismaClient } from "./generated/prisma";
+
+import { PrismaClient } from "@prisma/client";
+
 
 import { Kafka } from "kafkajs";
 
