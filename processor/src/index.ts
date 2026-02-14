@@ -4,7 +4,7 @@ import { Kafka } from "kafkajs";
 
 const client = new PrismaClient();
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3003;
 
 // Topic name must match your Aiven dashboard configuration
 const TOPIC_NAME = "zap-runs"; 

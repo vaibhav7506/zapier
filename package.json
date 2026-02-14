@@ -1,18 +1,16 @@
 {
   "scripts": {
-    "backend": "tsx primary-backend/src/index.ts",
+    "backend": "cd primary-backend && npx tsx src/types/index.ts",
     "frontend": "cd frontend && npm run dev",
-    "hooks": "cd hooks && npm start",
-    "processor": "cd processor && npm start",
-    "worker": "cd worker && tsx src/index.ts",
+    "hooks": "cd hooks && npx ts-node src/index.ts",
+    "processor": "cd processor && npx ts-node src/index.ts",
+    "worker": "cd worker && npx tsx src/index.ts",
     "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
     "dev:all": "concurrently \"npm run backend\" \"npm run frontend\" \"npm run hooks\" \"npm run processor\" \"npm run worker\"",
     "prisma:generate": "prisma generate --schema=primary-backend/prisma/schema.prisma",
     "prisma:migrate": "prisma migrate dev --schema=primary-backend/prisma/schema.prisma",
-    "prisma:seed": "tsx primary-backend/prisma/seed.ts",
-    "prisma:studio": "prisma studio --schema=primary-backend/prisma/schema.prisma",
-    "build:frontend": "cd frontend && npm run build",
-    "start:frontend": "cd frontend && npm start"
+    "prisma:seed": "npx tsx primary-backend/prisma/seed.ts",
+    "prisma:studio": "npx prisma studio --schema=primary-backend/prisma/schema.prisma"
   },
   "dependencies": {
     "@prisma/client": "^6.19.2",

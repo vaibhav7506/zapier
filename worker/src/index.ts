@@ -112,7 +112,7 @@ async function main() {
 
 // Render Health Check Server
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3004; // Changed from 3000 to 3004
 
 app.get('/', (req, res) => res.send('Worker is healthy and consuming messages!'));
 
